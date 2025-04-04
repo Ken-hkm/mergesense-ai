@@ -1,8 +1,9 @@
 import google.generativeai as genai
 import os
 import requests
+from dotenv import load_dotenv
 
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+load_dotenv()
 
 
 def fetch_pr_changes(pr_id, platform, repo, headers):
@@ -30,8 +31,9 @@ def fetch_github_changes(pr_id, repo, headers):
     """Fetch PR diffs from GitHub using provided authentication headers"""
     api_url = f"https://api.github.com/repos/{repo}/pulls/{pr_id}/files"
 
-    response = requests.get(api_url, headers=headers)
+    print(api_url)
 
+    response = requests.get(api_url, headers=headers)
     if response.status_code == 200:
         files = response.json()
         return "\n".join([f"File: {file['filename']}\n{file['patch']}" for file in files if 'patch' in file])
@@ -61,8 +63,8 @@ def analyze_code_with_ai(pr_id, platform, repo, headers):
 
         Consider readability, performance, and security.
         """
-
-        model = genai.GenerativeModel("gemini-pro")
+        genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+        model = genai.GenerativeModel("models/gemini-1.5-pro-002")
         response = model.generate_content(prompt)
 
         if response and response.text:
