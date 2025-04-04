@@ -9,4 +9,4 @@ source venv/bin/activate  # macOS/Linux
 
 # Run FastAPI with Uvicorn
 echo "Starting FastAPI server on port $PORT..."
-uvicorn app.main:app --host 127.0.0.1 --port $PORT --reload
+uvicorn main:app --host 127.0.0.1 --port $PORT --reload
